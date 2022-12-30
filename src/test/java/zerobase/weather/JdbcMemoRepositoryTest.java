@@ -24,14 +24,14 @@ public class JdbcMemoRepositoryTest {
     void insertMemoTest() {
 
     	// given
-        Memo newMemo = new Memo(1, "this is new memo");
+        Memo newMemo = new Memo(1, "this is jdbc memo");
 
     	// when
         jdbcMemoRepository.save(newMemo);
 
     	// then
         Optional<Memo> result = jdbcMemoRepository.findById(1);
-        assertEquals(result.get().getText(), "this is new memo");
+        assertEquals(result.get().getText(), "this is jdbc memo");
     }
 
     @Test
