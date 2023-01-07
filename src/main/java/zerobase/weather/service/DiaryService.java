@@ -7,6 +7,8 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import zerobase.weather.domain.Diary;
 import zerobase.weather.repository.DiaryRepository;
 
@@ -19,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 @RequiredArgsConstructor
 @Service
 public class DiaryService {
@@ -28,6 +31,7 @@ public class DiaryService {
 
     private final DiaryRepository diaryRepository;
 
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void createDiary(LocalDate date, String text) {
         // OpenWeatherMap에서 날씨 데이터 가져오기
         String weatherData = getWeatherString();
@@ -45,10 +49,12 @@ public class DiaryService {
         diaryRepository.save(nowDiary);
     }
 
+    @Transactional(readOnly = true)
     public List<Diary> readDiary(LocalDate date) {
         return diaryRepository.findAllByDate(date);
     }
 
+    @Transactional(readOnly = true)
     public List<Diary> readDiaries(LocalDate startDate, LocalDate endDate) {
         return diaryRepository.findAllByDateBetween(startDate, endDate);
     }
